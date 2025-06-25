@@ -11,6 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 // import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 // import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const mainListItems = [
   { text: 'Боты', icon: <HomeRoundedIcon />, to: '/' },
@@ -20,7 +21,7 @@ const mainListItems = [
 ];
 
 const secondaryListItems = [
-  { text: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
+  { text: 'Добавить User', icon: <PersonAddIcon />, to: '/add-user' },
 ];
 
 export const SideBarList: React.FC = () => {

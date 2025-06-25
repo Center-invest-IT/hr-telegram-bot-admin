@@ -1,32 +1,45 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SmartToy } from '@mui/icons-material';
+import { SmartToy, Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Avatar,
   Box,
   Button,
   Container,
   CssBaseline,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { login } from '../../shared/store/use-auth-store.ts';
-// import { useAuthStore } from "../store/authStore";
 
 const schema = z.object({
-  email: z.string().email('Введите корректный email'),
-  password: z.string().min(6, 'Пароль минимум 6 символов'),
+  username: z
+    .string()
+    .min(
+      4,
+      'Введите корректный логин (только латиница и цифры, минимум 4 символа)'
+    )
+    .regex(/^[a-zA-Z0-9]+$/, 'Только латиница и цифры, минимум 4 символа'),
+  password: z
+    .string()
+    .min(6, 'Пароль минимум 6 символов')
+    .regex(/^[a-zA-Z0-9]+$/, 'Только латиница и цифры, минимум 4 символа'),
 });
 
 type LoginFormData = z.infer<typeof schema>;
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  // const login = useAuthStore((state) => state.login);
-  // const login = false
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -37,16 +50,30 @@ const LoginPage: React.FC = () => {
     mode: 'onTouched',
   });
 
+  const handleClickShowPassword = () => {
+    if (inputRef.current) {
+      const { selectionStart } = inputRef.current;
+      setShowPassword(!showPassword);
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          inputRef.current.selectionStart = selectionStart;
+        }
+      });
+    } else {
+      setShowPassword(!showPassword);
+    }
+  };
+
+  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  };
+
   const onSubmit = async (data: LoginFormData) => {
     try {
-      // ⚠️ Здесь будет запрос к API — сейчас заглушка
-      // eslint-disable-next-line no-console
       console.log('Отправка данных:', data);
-      await login(data.email, data.password);
-      // login("mock_token_value");
+      await login(data.username, data.password);
       navigate('/');
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Ошибка авторизации', err);
     }
   };
@@ -73,27 +100,48 @@ const LoginPage: React.FC = () => {
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ mt: 1 }}
+          sx={{ mt: 1, width: '100%' }}
         >
           <TextField
             margin="normal"
             fullWidth
-            label="Email"
-            autoComplete="email"
-            {...register('email')}
-            error={!!errors.email}
-            helperText={errors.email?.message}
+            label="Username"
+            autoComplete="username"
+            {...register('username')}
+            error={!!errors.username}
+            helperText={errors.username?.message}
           />
 
-          <TextField
-            margin="normal"
-            fullWidth
-            label="Пароль"
-            type="password"
-            {...register('password')}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-          />
+          <FormControl margin="normal" fullWidth variant="outlined">
+            <InputLabel htmlFor="password-field" error={!!errors.password}>
+              Пароль
+            </InputLabel>
+            <OutlinedInput
+              id="password-field"
+              inputRef={inputRef}
+              type={showPassword ? 'text' : 'password'}
+              error={!!errors.password}
+              label="Пароль"
+              {...register('password')}
+              endAdornment={(
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )}
+            />
+            {errors.password && (
+              <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                {errors.password.message}
+              </Typography>
+            )}
+          </FormControl>
 
           <Button
             type="submit"

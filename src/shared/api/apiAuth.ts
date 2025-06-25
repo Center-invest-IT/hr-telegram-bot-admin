@@ -1,9 +1,10 @@
 import { apiAuth } from './config.ts';
 
-export const fetchLogin = async (email: string, password: string) => {
+export const fetchLogin = async (token: string) => {
   const response = await apiAuth.post('', {
-    email,
-    password,
+    headers: {
+      Authorization: `Basic ${token}`
+    }
   });
   return response.data;
 };

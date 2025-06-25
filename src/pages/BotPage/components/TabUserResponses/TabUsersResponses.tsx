@@ -1,11 +1,12 @@
 import { QuestionAnswer } from '@mui/icons-material';
-import { List, Paper, Typography } from '@mui/material';
+import { Box, CircularProgress, List, Paper, Typography } from '@mui/material';
 
 import React, { useEffect, useState } from 'react';
 // import type { UserAnswer } from './UserResponse.tsx';
 import { getResponses } from '../../../../shared/api/apiBot.ts';
 import type { Answers } from '../../../../shared/types/apiTypes.ts';
 import ResponsesItem from './ResponsesItem.tsx';
+import { addNotification } from '../../../../shared/store/use-notification-store.ts';
 
 interface TabUsersResponsesProps {
   botId: string;
@@ -13,16 +14,44 @@ interface TabUsersResponsesProps {
 
 const TabUsersResponses: React.FC<TabUsersResponsesProps> = ({ botId }) => {
   const [dataResponses, setDataResponses] = useState<Answers[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async (idFetch: string) => {
-    const res = await getResponses(idFetch);
-    setDataResponses(res);
+    setLoading(true)
+    try {
+
+      const res = await getResponses(idFetch);
+      setDataResponses(res);
+    } catch (error) {
+      addNotification(
+        error instanceof Error ? error.message : 'Неизвестная ошибка',
+        'error',
+        6000
+      );
+    } finally {
+      setLoading(false)
+    }
   };
 
   useEffect(() => {
     if (!botId) return;
     fetchData(botId);
+
   }, [botId]);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        width="100%"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Paper sx={{ p: 3, borderRadius: 2 }}>
@@ -39,9 +68,9 @@ const TabUsersResponses: React.FC<TabUsersResponsesProps> = ({ botId }) => {
       </Typography>
 
       <List>
-        {dataResponses.map((usersResponse) => (
+        {dataResponses.map((usersResponse, i) => (
           <ResponsesItem
-            key={`response-${usersResponse.questionId}`}
+            key={`response-${usersResponse.questionId}-${i + 1}`}
             usersResponse={usersResponse}
           />
         ))}

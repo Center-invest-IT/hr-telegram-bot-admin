@@ -118,7 +118,7 @@
   ],
   "responses": [
     {
-      "questionId": null,
+      "questionId": "q33234f32",
       "botId": "1",
       "title": "Какой у вас опыт работы?",
       "countResponse": 10,
@@ -141,7 +141,7 @@
       ]
     },
     {
-      "questionId": null,
+      "questionId": "q32323f32",
       "botId": "1",
       "title": "Какой у вас опыт работы?",
       "countResponse": 10,
@@ -171,7 +171,7 @@
       ]
     },
     {
-      "questionId": null,
+      "questionId": "q3f32",
       "botId": "1",
       "title": "Какой у вас опыт работы?",
       "countResponse": 0,
@@ -179,7 +179,7 @@
       "answers": []
     },
     {
-      "questionId": null,
+      "questionId": "q3fdf",
       "botId": "2",
       "title": "Какой у вас вопрос по поддержке?",
       "countResponse": 7,

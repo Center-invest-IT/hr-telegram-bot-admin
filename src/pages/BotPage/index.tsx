@@ -28,6 +28,7 @@ const BotPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [notCon, setNotCon] = useState(false);
 
+
   // Определяем активную вкладку из URL при монтировании
   useEffect(() => {
     const tabFromUrl = searchParams.get('tab');

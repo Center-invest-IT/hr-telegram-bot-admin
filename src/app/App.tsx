@@ -6,6 +6,7 @@ import HomePage from '../pages/HomePage/index.tsx';
 import LoginPage from '../pages/LoginPage/index.tsx';
 import { useIsAuth } from '../shared/store/use-auth-store.ts';
 import { Layout } from './Layout.tsx';
+import AddUser from '../pages/AddUser/index.tsx';
 
 // Компонент для защищённых маршрутов
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
@@ -47,6 +48,14 @@ const App = () => {
           element={(
             <PrivateRoute>
               <AddBot />
+            </PrivateRoute>
+          )}
+        />
+        <Route
+          path="/add-user"
+          element={(
+            <PrivateRoute>
+              <AddUser/>
             </PrivateRoute>
           )}
         />
