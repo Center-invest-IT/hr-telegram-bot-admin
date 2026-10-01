@@ -1,95 +1,43 @@
-## 🚀 Как запустить у себя?
+# Центр-инвест: панель Telegram-ботов
 
-## 📦 Окружение
+Демонстрационная версия интерфейса, созданного во время летней практики 2025 года. Это публичный fork учебного проекта `Center-invest-IT/hr-telegram-bot-admin` с адаптированными данными для портфолио.
 
-- Node.js v22.13.1
-- npm v10.9.2
+## Мой вклад
 
-- [Node.js](https://nodejs.org/) — установка Node.js
-- [NPM](https://www.npmjs.com/) — менеджер пакетов npm
+За три недели я разработал интерфейс внутренней панели для управления Telegram-ботами: определил набор технологий, собрал пользовательские сценарии и интегрировал экранные состояния с API. В работе помогали менторы: они давали ревью по структуре запросов, обработке асинхронных операций и требованиям к интерфейсу.
 
-1. Клонируйте репозиторий:
+- Формы создания и редактирования ботов на React Hook Form.
+- Валидация пользовательского ввода через Zod.
+- Защищённые маршруты и авторизация на Zustand.
+- API-слой на Axios: перехватчики запросов и ответов, единая обработка ошибок.
+- Виртуализированная таблица списка ботов на React Virtuoso.
+- Сценарии загрузки, ошибок, удаления и уведомлений на MUI.
+
+## Стек
+
+React, TypeScript, MUI, Zustand, React Hook Form, Zod, Axios, React Virtuoso, Vite.
+
+## Публичное демо
+
+Для развёртывания без доступа к внутреннему API проект использует локальный демонстрационный слой. Начальные данные хранятся в коде, а изменения сохраняются в `localStorage` браузера. Поэтому в опубликованной версии работают вход, создание, редактирование и удаление ботов, а также создание и удаление вопросов.
+
+После деплоя откройте `/?demo=1`, чтобы сразу попасть в панель. Обычный сценарий также доступен через форму входа: подойдёт любой email и пароль от 6 символов.
+
+## Локальный запуск
+
+Требуется Node.js 22+.
 
 ```bash
-git clone https://github.com/Center-invest-IT/hr-telegram-bot-admin
-```
-
-2. Перейдите в папку проекта:
-3. Установите зависимости:
-
-```bash
-npm install
-```
-
-4. Запустите проект:
-
-```bash
+npm ci
 npm run dev
 ```
 
-## 🔑 Авторизация
+Production-сборка:
 
-Для входа используйте **любой email и пароль**, главное — пройти валидацию.
-
-**Пример:**
-```
-Email: 23fsdf@gmail.com
-Пароль: 3432424
+```bash
+npm run build
 ```
 
----
-Какаята белеберда
-# React + TypeScript + Vite
+## Vercel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Vercel автоматически определит Vite. Файл `vercel.json` добавляет rewrite на `index.html`, поэтому прямые переходы по маршрутам `/bots/:id` продолжают работать.

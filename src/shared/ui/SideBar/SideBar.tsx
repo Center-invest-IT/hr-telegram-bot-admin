@@ -73,7 +73,7 @@ export const SideBar: React.FC = () => {
           justifyContent: 'center',
           alignItems: 'center',
           textDecoration: 'none',
-          color: 'blue',
+          color: 'primary.main',
           flexGrow: 1, // Занимает всё доступное пространство слева
         }}
       >
@@ -85,7 +85,7 @@ export const SideBar: React.FC = () => {
             fontWeight: 700,
           }}
         >
-          TG BOT ADMIN
+          ЦЕНТР-ИНВЕСТ
         </Typography>
       </Box>
 
@@ -156,7 +156,7 @@ export const SideBar: React.FC = () => {
               variant="h6"
               sx={{ color: 'text.secondary' }}
             >
-              riley@email.com
+              demo@center-invest.ru
             </Typography>
           </Box>
           <IconButton onClick={() => setLogoutClick(true)}>

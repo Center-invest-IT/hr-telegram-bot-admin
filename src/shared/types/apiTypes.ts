@@ -1,17 +1,18 @@
 export interface BotShortType {
   id: string;
   name: string;
-  isOnline?: boolean;
+  isOnline: boolean;
   newMessagesCount: number;
 }
 
 export interface BotCardInfoType {
-  id: number;
+  id: string;
   name: string;
   token: string;
   description: string;
   isOnline: boolean;
   createdAt: string;
+  newMessagesCount: number;
 }
 
 
@@ -39,7 +40,7 @@ export interface UserAnswer {
 }
 
 export interface Answers {
-  questionId: string;
+  questionId: string | null;
   botId: string;
   title: string;
   countResponse: number,

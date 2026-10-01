@@ -191,7 +191,7 @@ const ReactVirtualizedTable = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteBot(Number(id));
+      await deleteBot(id);
       setBots((prev) => prev.filter((bot) => bot.botId !== id));
       setNeedsUpdate(true); // Устанавливаем флаг обновления
       addNotification('Бот успешно удален', 'success', 3000);
@@ -212,12 +212,12 @@ const ReactVirtualizedTable = () => {
     try {
       const response = await getBots();
       const botsShort = response.map((bot: BotShortType) => ({
+        id: bot.id,
         botId: bot.id,
         name: bot.name,
         isOnline: bot.isOnline,
         newMessagesCount: bot.newMessagesCount,
       }));
-      console.log(botsShort);
       setBots(botsShort);
     } catch (error: unknown) {
       const apiError = error as ApiError;

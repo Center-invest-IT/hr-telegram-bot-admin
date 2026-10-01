@@ -12,12 +12,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 // import { Question } from './Question.tsx';
 import {
   createQuestions,
+  deleteQuestion,
   getQuestions,
 } from '../../../../shared/api/apiBot.ts';
 import { addNotification } from '../../../../shared/store/use-notification-store.ts';
@@ -129,7 +129,7 @@ const TabQuestions: React.FC<TabQuestionsProps> = ({ botId }) => {
     setQuestionLoadingId(id);
     setQuestions((prev) => prev.filter((q) => q.id !== id));
     try {
-      await axios.delete(`http://localhost:3006/questions/${id}`);
+      await deleteQuestion(id);
     } catch (error) {
       addNotification(
         error instanceof Error

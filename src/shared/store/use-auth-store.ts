@@ -17,7 +17,7 @@ interface ITodoState extends iInitialState, IActions {}
 
 const initialState: iInitialState = {
   isLoading: false,
-  isAuth: false,
+  isAuth: new URLSearchParams(window.location.search).has('demo'),
   token: null,
 };
 
@@ -33,7 +33,7 @@ const todoStore: StateCreator<
     [['zustand/devtools', never], ['zustand/persist', unknown]]
 > = (set) => ({
   ...initialState,
-  login: async (email, password) => {
+  login: async (_email, _password) => {
     set({ isLoading: true }, false, 'login');
     try {
       // const response = await axios.post('https://dummyjson.com/auth/login', {

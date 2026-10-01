@@ -14,13 +14,13 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
 const mainListItems = [
   { text: 'Боты', icon: <HomeRoundedIcon />, to: '/' },
-  { text: 'Добавить Бота', icon: <AnalyticsRoundedIcon />, to: '/add-bot' },
+  { text: 'Новый бот', icon: <AnalyticsRoundedIcon />, to: '/add-bot' },
   // { text: 'Clients', icon: <PeopleRoundedIcon />, to: '/clients' },
   // { text: 'Tasks', icon: <AssignmentRoundedIcon />, to: '/tasks' },
 ];
 
 const secondaryListItems = [
-  { text: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
+  { text: 'Настройки', icon: <SettingsRoundedIcon />, to: '/' },
 ];
 
 export const SideBarList: React.FC = () => {

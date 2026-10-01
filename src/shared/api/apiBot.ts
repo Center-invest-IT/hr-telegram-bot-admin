@@ -1,92 +1,77 @@
-// import { apiErrorHandle } from './apiErrorHandler';
-import axios from 'axios';
-import { apiBots } from './config.ts';
 import type { newQuestionType } from '../../pages/BotPage/components/TabQuestionsCreate/TabQuestions.tsx';
+import type { BotCardInfoType } from '../types/apiTypes.ts';
+import { demoStore } from './demo-store.ts';
+
+const delay = () => new Promise<void>((resolve) => {
+  window.setTimeout(resolve, 180);
+});
 
 export const getBots = async () => {
-  const response = await apiBots.get('/bots');
-  return response.data;
+  await delay();
+  return demoStore.getBots();
 };
 
 export const getBotInfo = async (botId: string) => {
-  const response = await apiBots.get(`/bots/${botId}`);
-  return response.data;
+  await delay();
+  const bot = demoStore.getBots().find((item) => item.id === botId);
+  if (!bot) throw new Error('Бот не найден');
+  return bot;
 };
 
-// поменять botData когда будет не фэйк api
-export const createNewBot = async (botData: {
-  id: string;
-  name: string;
-  isOnline: boolean;
-  newMessagesCount: number;
-  createdAt: number;
-  // token: string;
-  // description?: string;
-}) => {
-  // name: data.name.trim(),
-  //             id: Date.now().toString(),
-  //             isOnline: false,
-  //             newMessagesCount: 0,
-  //             createdAt: Date.now(),
-  const payload = {
+export const createNewBot = async (botData: Pick<BotCardInfoType, 'name' | 'token' | 'description'>) => {
+  await delay();
+  const bot: BotCardInfoType = {
     ...botData,
-    // name: botData.name.trim(),
-    // id: Date.now().toString(),
-    // isOnline: false,
-    // newMessagesCount: 0,
-    // createdAt: Date.now(),
+    id: crypto.randomUUID(),
+    isOnline: false,
+    newMessagesCount: 0,
+    createdAt: new Date().toISOString(),
   };
-
-  const response = await apiBots.post('/bots', payload);
-  return response.data;
+  demoStore.setBots([bot, ...demoStore.getBots()]);
+  return bot;
 };
 
-
-export interface UpdateBotProps {
-  // id: string,
-  name: string,
-  botId: number;
-  token: string;
-  description: string;
-  isActive: boolean;
-
-}
-
-export const updateBot = async (botId: number, updatedFields: Partial<UpdateBotProps>) => {
-  const response = await apiBots.put(`/bots/${botId}`, updatedFields);
-  return response.data;
+export const updateBot = async (
+  botId: string,
+  updatedFields: Partial<Pick<BotCardInfoType, 'name' | 'token' | 'description'>>,
+) => {
+  await delay();
+  const bots = demoStore.getBots();
+  const index = bots.findIndex((bot) => bot.id === botId);
+  if (index < 0) throw new Error('Бот не найден');
+  const updatedBot = { ...bots[index], ...updatedFields };
+  bots[index] = updatedBot;
+  demoStore.setBots(bots);
+  return updatedBot;
 };
 
-export const deleteBot = async (botId: number) => {
-  // const response = await apiBots.delete(`/bots/${botId}/botinfo`);
-  // return response.data[0];
+export const deleteBot = async (botId: string) => {
+  await delay();
+  const bots = demoStore.getBots();
+  if (!bots.some((bot) => bot.id === botId)) throw new Error('Бот не найден');
+  demoStore.setBots(bots.filter((bot) => bot.id !== botId));
+  demoStore.setQuestions(demoStore.getQuestions().filter((question) => question.botId !== botId));
+  demoStore.setResponses(demoStore.getResponses().filter((response) => response.botId !== botId));
 };
 
-// Responses
 export const getResponses = async (botId: string) => {
-  const response = await apiBots.get(`responses?botId=${botId}`);
-  return response.data;
+  await delay();
+  return demoStore.getResponses().filter((response) => response.botId === botId);
 };
-// Responses Questions
+
 export const getQuestions = async (botId: string) => {
-  const response = await apiBots.get(`questions?botId=${botId}`);
-  return response.data;
+  await delay();
+  return demoStore.getQuestions().filter((question) => question.botId === botId);
 };
 
 export const createQuestions = async (newQuestionData: newQuestionType) => {
-  const response = await apiBots.post('questions', newQuestionData);
-  return response.data;
+  await delay();
+  const question = { ...newQuestionData, id: crypto.randomUUID() };
+  demoStore.setQuestions([question, ...demoStore.getQuestions()]);
+  return question;
 };
 
-export const updateQuestions = async (botId: string) => {
-  const response = await apiBots.get(`responses?botId=${botId}`);
-  return response.data;
+export const deleteQuestion = async (questionId: string) => {
+  await delay();
+  demoStore.setQuestions(demoStore.getQuestions().filter((question) => question.id !== questionId));
 };
-
-export const deleteQuestions = async (botId: string) => {
-  const response = await apiBots.get(`responses?botId=${botId}`);
-  return response.data;
-};
-// GET http://localhost:3006/responses?botId=1
-
-// GET http://localhost:3006/answers?questionId=q1onses

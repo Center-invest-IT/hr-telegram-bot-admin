@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { updateBot } from '../../../shared/api/apiBot.ts';
+import { deleteBot, updateBot } from '../../../shared/api/apiBot.ts';
 import { addNotification } from '../../../shared/store/use-notification-store.ts';
 import type { ApiError } from '../../../shared/api/errorHandler.ts';
 import { useNavigate } from 'react-router-dom';
@@ -39,11 +39,11 @@ export const BotInfoCard: React.FC<BotInfoCardProps> = ({ bot }) => {
     setIsEditing(false);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!id) return;
 
     try {
-      // await deleteBot(Number(id));
+      await deleteBot(id);
       addNotification('Бот успешно удален', 'success', 3000);
       navigate('/');
     } catch (error: unknown) {
@@ -60,13 +60,18 @@ export const BotInfoCard: React.FC<BotInfoCardProps> = ({ bot }) => {
 
   const onSubmit = async (data: BotCardInfoType) => {
     try {
-      await updateBot(bot.id, data); // можно передавать только изменённые поля, если нужно
+      await updateBot(bot.id, {
+        name: data.name,
+        token: data.token,
+        description: data.description,
+      });
       setIsEditing(false);
       reset(data);
+      addNotification('Изменения сохранены', 'success', 3000);
 
-    } catch (error) {
-      // обработка ошибки
-      // console.error('Ошибка обновления бота:', error);
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      addNotification(apiError.message, 'error', 6000);
     }
   };
 

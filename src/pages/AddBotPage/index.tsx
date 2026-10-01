@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { createNewBot } from '../../shared/api/apiBot.ts';
 import { addNotification } from '../../shared/store/use-notification-store.ts';
 import { Header } from '../../shared/ui/Header.tsx';
+import { useNavigate } from 'react-router-dom';
 
 interface Bot {
   name: string;
@@ -12,6 +13,7 @@ interface Bot {
 }
 
 const AddBot: React.FC = () => {
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors, isValid },
@@ -23,15 +25,14 @@ const AddBot: React.FC = () => {
     try {
       const payload = {
         name: data.name.trim(),
-        id: Date.now().toString(),
-        isOnline: false,
-        newMessagesCount: 0,
-        createdAt: Date.now(),
+        token: data.token.trim(),
+        description: data.description?.trim() || 'Описание не указано',
       };
-      createNewBot(payload);
+      const bot = await createNewBot(payload);
 
       addNotification('Бот успешно добавлен!', 'success', 6000);
       reset();
+      navigate(`/bots/${bot.id}`);
     } catch (error) {
       addNotification(
         error instanceof Error ? error.message : 'Неизвестная ошибка',
